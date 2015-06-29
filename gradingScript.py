@@ -19,12 +19,16 @@ students = os.listdir(bulkDownload)
 def findPYFile(path):
 	#if os.listdir(path) contains a .py file then return true
 	#else dig deeper
+	if len(os.listdir(path)) <= 0:
+		return False
 
 	items = os.listdir(path)
-	if "hw04.py" in items or "HW04.py" in items:
+	newPath = path + "/" + items[0]
+	
+	if "hw01.py" in items or "HW01.py" in items:
 		return True
-	elif len(items) > 0:
-		return findPYFile(path + "/" + items[0])
+	elif os.path.isdir(newPath):
+		return findPYFile(newPath)
 	else:
 		return False
 
