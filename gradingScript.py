@@ -17,38 +17,37 @@ bulkDownload = "C:\Users/rbarillas3\Downloads\Bulk Download/".replace("\\", "/")
 students = os.listdir(bulkDownload)
 
 def findPYFile(path):
-	#if os.listdir(path) contains a .py file then return true
-	#else dig deeper
+	#if the current directory is empty return none
 	if len(os.listdir(path)) <= 0:
-		return False
+		return (False, "")
 
 	items = os.listdir(path)
 	newPath = path + "/" + items[0]
-	
+
+	#if the file is there return the path of its directory
+	#if it doesnt exist and we can go deeper then go deeper
+	#else return none
 	if "hw01.py" in items or "HW01.py" in items:
-		return True
+		return (True, path)
 	elif os.path.isdir(newPath):
 		return findPYFile(newPath)
 	else:
-		return False
-
-#for item in os.listdir(path):
-#	print item
-#	break
-
-#sys.path.append(path)
-
-#from sandbox import test
-
-#print len(sys.path)
-
-#print test()
+		return (False, "")
 
 def navigate():
+	#cycle through every student
 	for student in students:
+		#makes a path based on current student
 		path = bulkDownload + student
 		lastName = student.split(",")[0]
-		if not findPYFile(path):
-			print "%s contains the homework file: %s \n" % (lastName, findPYFile(path))
+		if findPYFile(path)[0]:
+			sys.path.append(findPYFile(path)[1])
+			try:
+				from hw01 import speak
+			except Exception, e:
+				from HW01 import speak
+			speak()
+			sys.path.remove(findPYFile(path)[1])
+		#print "%s contains the homework file: %s \n" % (lastName, findPYFile(path))
 
 navigate()
