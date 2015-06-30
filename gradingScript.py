@@ -13,7 +13,20 @@
 import sys
 import os
 
-bulkDownload = "C:\Users/rbarillas3\Downloads\Bulk Download/".replace("\\", "/")
+
+bulkPathList = [
+	"C:/Users/rbarillas3/Downloads/Bulk Download/",
+	"D:/Users/Ricky/Downloads/Bulk Download/"
+]
+
+bulkDownload = ""
+
+#to make it compatible with any developing computer
+for bulkPath in bulkPathList:
+	if os.path.exists(bulkPath):
+		bulkDownload = bulkPath
+
+#List of student directories
 students = os.listdir(bulkDownload)
 
 def findPYFile(path):
@@ -35,19 +48,32 @@ def findPYFile(path):
 		return (False, "")
 
 def navigate():
+	counter = 0
+
 	#cycle through every student
 	for student in students:
 		#makes a path based on current student
 		path = bulkDownload + student
-		lastName = student.split(",")[0]
+		#print student
+		lastName = student.split(",")[0].strip()
 		if findPYFile(path)[0]:
 			sys.path.append(findPYFile(path)[1])
 			try:
 				from hw01 import speak
 			except Exception, e:
 				from HW01 import speak
-			speak()
+			print lastName, speak()
+			counter = counter + 1
 			sys.path.remove(findPYFile(path)[1])
 		#print "%s contains the homework file: %s \n" % (lastName, findPYFile(path))
 
+
+
 navigate()
+
+
+
+"""
+	For some reason in the Note: Suppress Return commit it prints none
+	Learn how to suppress unwanted return statements
+"""
