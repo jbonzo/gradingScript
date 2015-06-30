@@ -29,51 +29,61 @@ for bulkPath in bulkPathList:
 #List of student directories
 students = os.listdir(bulkDownload)
 
+
+
+
 def findPYFile(path):
 	#if the current directory is empty return none
 	if len(os.listdir(path)) <= 0:
 		return (False, "")
-
 	items = os.listdir(path)
 	newPath = path + "/" + items[0]
 
 	#if the file is there return the path of its directory
 	#if it doesnt exist and we can go deeper then go deeper
 	#else return none
-	if "hw01.py" in items or "HW01.py" in items:
+	if "hw06.py" in items or "HW06.py" in items:
 		return (True, path)
 	elif os.path.isdir(newPath):
 		return findPYFile(newPath)
 	else:
 		return (False, "")
 
+
 def navigate():
 	counter = 0
-
 	#cycle through every student
 	for student in students:
 		#makes a path based on current student
 		path = bulkDownload + student
-		#print student
 		lastName = student.split(",")[0].strip()
 		if findPYFile(path)[0]:
-			sys.path.append(findPYFile(path)[1])
-			try:
-				from hw01 import speak
-			except Exception, e:
-				from HW01 import speak
-			print lastName, speak()
 			counter = counter + 1
-			sys.path.remove(findPYFile(path)[1])
-		#print "%s contains the homework file: %s \n" % (lastName, findPYFile(path))
+			return findPYFile(path)[1]
+
+def callFunctions(filePath):
+	sys.path.append(filePath)
+	try:
+		from hw06 import evenOdd
+	except Exception, e:
+		from HW06 import evenOdd
+
+	evenOdd()
+	sys.path.remove(filePath)
 
 
-
-navigate()
-
+callFunctions(navigate())
 
 
 """
 	For some reason in the Note: Suppress Return commit it prints none
 	Learn how to suppress unwanted return statements
+"""
+
+"""
+	change reference of:
+		from HW01 import *
+	to:
+		form HWa import *
+	Make HWa point to an item from a list of references
 """
