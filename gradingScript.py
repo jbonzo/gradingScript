@@ -5,6 +5,7 @@
 	2. Call functions from files in script
 		Use sys.path.append(path)
 	2a. Account for getMediaPath()
+		In order to account for getMediaPath() we must edit their code
 	3. Read output.txt files and ensure they are similar to test case files
 	4. Record how many are right vs wrong
 	5. print score
@@ -16,11 +17,12 @@ import os
 
 bulkPathList = [
 	"C:/Users/rbarillas3/Downloads/Bulk Download/",
-	"D:/Users/Ricky/Downloads/Bulk Download/"
+	"D:/Users/Ricky/Downloads/Bulk Download/",
+	"C:/Users/Ricky/Downloads/Bulk Download/"
 ]
 
 bulkDownload = ""
-
+textPath = "C:/Users/Ricky/Downloads/Bulk Download/Media Sources/text/"
 #to make it compatible with any developing computer
 for bulkPath in bulkPathList:
 	if os.path.exists(bulkPath):
@@ -49,6 +51,8 @@ def findPYFile(path):
 	else:
 		return (False, "")
 
+def getMediaPath():
+	return textPath
 
 def navigate():
 	counter = 0
@@ -59,6 +63,7 @@ def navigate():
 		lastName = student.split(",")[0].strip()
 		if findPYFile(path)[0]:
 			counter = counter + 1
+			#string type for homework file path
 			return findPYFile(path)[1]
 
 def callFunctions(filePath):
@@ -68,8 +73,9 @@ def callFunctions(filePath):
 	except Exception, e:
 		from HW06 import evenOdd
 
-	evenOdd()
+	evenOdd(textPath + "words.txt")
 	sys.path.remove(filePath)
+	open()
 
 
 callFunctions(navigate())
