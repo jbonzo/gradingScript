@@ -14,11 +14,13 @@
 
 import sys
 import os
+import filecmp
 
 #################### Set Up ####################
 
 currentPathList = [
-	"D:/Users/Ricky/Desktop/Coding/Projects/gradingScript/"
+	"D:/Users/Ricky/Desktop/Coding/Projects/gradingScript/",
+	"C:/Users/Ricky/Desktop/coding/Projects/gradingScript"
 ]
 currentPath = ""
 
@@ -121,7 +123,8 @@ def callFunctions(filePath):
 		evenOdd("words.txt")
 		sys.path.remove(filePath)
 
-
+def fileCheck(file1, file2):
+	return filecmp.cmp(file1, file2)
 
 def runner():
 	fileList = navigateAndStore()
@@ -132,8 +135,9 @@ def runner():
 		break
 
 
+print fileCheck(getMediaPath() + "evenOddTest.txt", getMediaPath() + "evenOdd.txt")
+#runner()
 
-runner()
 #print getNewCode()
 #print open(currentPath + "gradingScript.py", "r").read()
 
