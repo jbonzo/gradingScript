@@ -21,7 +21,8 @@ import filecmp
 
 currentPathList = [
 	"D:/Users/Ricky/Desktop/Coding/Projects/gradingScript/",
-	"C:/Users/Ricky/Desktop/coding/Projects/gradingScript"
+	"C:/Users/Ricky/Desktop/coding/Projects/gradingScript/",
+	"C:/Users/rbarillas3/Documents/GitHub/gradingScript/"
 ]
 currentPath = ""
 
@@ -69,7 +70,8 @@ def findPYFile(path):
 def getMediaPath():
 	textPathList = [
 		"C:/Users/Ricky/Downloads/Bulk Download/Media Sources/text/",
-		"D:/Users/Ricky/Desktop/Classes/CS 1315 TA/text/"
+		"D:/Users/Ricky/Desktop/Classes/CS 1315 TA/text/",
+		"C:/Users/rbarillas3/Downloads/Bulk Download/Media Sources/text/"
 	]
 
 	for path in textPathList:
@@ -93,12 +95,19 @@ def navigateAndStore():
 	return studentFilePaths
 
 def getNewCode():
-	newCode = "import os\ndef getMediaPath():\n\ttextPathList = [\n\t\t"
-	newCode = newCode + "\"C:/Users/Ricky/Downloads/Bulk Download/Media Sources/text/\",\n\t\t"
-	newCode = newCode + "\"D:/Users/Ricky/Desktop/Classes/CS 1315 TA/text/\",\n\t]"
-	newCode = newCode + "\n\n\tfor path in textPathList:\n\t\tif os.path.exists(path):\n\t\t\t"
-	newCode = newCode + "return path\n\n"
-	return newCode
+	codeSource = open("gradingScript.py", "rt")
+	newCode = "import os\n"
+	sentinal = ""
+	while not sentinal == "def getMediaPath():\n":
+		sentinal = codeSource.readline()
+	
+	newCode = newCode + sentinal
+	sentinal = codeSource.readline()
+	
+	while not sentinal == "\t\t\treturn path\n":
+		newCode = newCode + sentinal
+		sentinal = codeSource.readline()
+	return newCode + sentinal
 
 def setMediaPath2(filePath, addCode):
 	fileName = "hw06.py" if os.path.exists(filePath + "hw06.py") else "HW06.py"
@@ -122,75 +131,74 @@ def callFunctions(filePath):
 		from hw06 import randomOrder, oneLine, underAverage, evenOdd, nicIsBack
 		os.startfile(filePath + "hw06.py")
 	except ImportError, e:
+		raise e
 		os.startfile(filePath + "HW06.py")
 		from HW06 import randomOrder, oneLine, underAverage, evenOdd, nicIsBack
+	
+	print "\nrandomOrder:"
+	try:
+		randomOrder("words.txt")
+	except IOError, e:
+		randomOrder(getMediaPath() + "words.txt")
+
+	raw_input("\nPress Enter to continue")
+
+	print "\noneLine.txt exists:",
+	try:
+		oneLine("words.txt")
+	except IOError, e:
+		oneLine(getMediaPath() + "words.txt")
+	if os.path.exists(getMediaPath() + "oneLine.txt"):
+		os.startfile(getMediaPath() + "oneLine.txt")
+		print  "True"
 	else:
-		print "\nrandomOrder:"
+		print "False"
+
+	raw_input("\nPress Enter to continue")
+
+	print "\nunderAverage:"
+	try:
+		underAverage("words2.txt")
+	except IOError, e:
+		underAverage(getMediaPath() + "words2.txt")
+
+	raw_input("\nPress Enter to continue")
+
+	print "\nevenOdd.txt exists:",
+	try:
+		evenOdd("words.txt")
+	except IOError, e:
+		evenOdd(getMediaPath() + "words.txt")	
+	if os.path.exists(getMediaPath() + "evenOdd.txt"):
+		os.startfile(getMediaPath() + "evenOdd.txt")
+		print "True"
+	else:
+		print "False"
+
+	raw_input("\nPress Enter to continue")
+
+	print "\nnicCage.txt exists:",
+	try:
+		nicIsBack("words.txt")
+	except IOError, e:
+		nicIsBack(getMediaPath() + "words.txt")
+	if os.path.exists(getMediaPath() + "nicCage.txt"):
+		os.startfile(getMediaPath() + "nicCage.txt")
+		print "True"
+	else:
+		print "False"
+	
+	sys.path.remove(filePath)
+	raw_input("\nPress Enter to go on to the next student")
+	if os.path.exists(getMediaPath() + "oneLine.txt"):
 		try:
-			randomOrder("words.txt")
-		except IOError, e:
-			randomOrder(getMediaPath() + "words.txt")
-
-		raw_input("\nPress Enter to continue")
-
-		print "\noneLine.txt exists:",
-		try:
-			oneLine("words.txt")
-		except IOError, e:
-			raise e
-			oneLine(getMediaPath() + "words.txt")
-		finally:
-			if os.path.exists(getMediaPath() + "oneLine.txt"):
-				os.startfile(getMediaPath() + "oneLine.txt")
-				print  "True"
-			else:
-				print "False"
-
-		raw_input("\nPress Enter to continue")
-
-		print "\nunderAverage:"
-		try:
-			underAverage("words2.txt")
-		except IOError, e:
-			underAverage(getMediaPath() + "words2.txt")
-
-		raw_input("\nPress Enter to continue")
-
-		print "\nevenOdd.txt exists:",
-		try:
-			evenOdd("words.txt")
-		except IOError, e:
-			evenOdd(getMediaPath() + "words.txt")
-		finally:
-			if os.path.exists(getMediaPath() + "evenOdd.txt"):
-				os.startfile(getMediaPath() + "evenOdd.txt")
-				print "True"
-			else:
-				print "False"
-
-		raw_input("\nPress Enter to continue")
-
-		print "\nnicCage.txt exists:",
-		try:
-			nicIsBack("words.txt")
-		except IOError, e:
-			nicIsBackCage(getMediaPath() + "words.txt")
-		finally:
-
-			if os.path.exists(getMediaPath() + "nicCage.txt"):
-				os.startfile(getMediaPath() + "nicCage.txt")
-				print "True"
-			else:
-				print "False"
-	finally:
-		sys.path.remove(filePath)
-		raw_input("\nPress Enter to go on to the next student")
-		if os.path.exists(getMediaPath() + "oneLine.txt"):
 			os.remove(getMediaPath() + "oneLine.txt")
-		if os.path.exists(getMediaPath() + "evenOdd.txt"):
-			os.remove(getMediaPath() + "evenOdd.txt")
-		if os.path.exists(getMediaPath() + "nicCage.txt"):
-			os.remove(getMediaPath() + "nicCage.txt")
+		except WindowsError, e:
+			print "Won't remove file"
+	if os.path.exists(getMediaPath() + "evenOdd.txt"):
+		os.remove(getMediaPath() + "evenOdd.txt")
+	if os.path.exists(getMediaPath() + "nicCage.txt"):
+		os.remove(getMediaPath() + "nicCage.txt")
 
 def grade():
 	pointsOff = 0
@@ -219,6 +227,13 @@ runner()
 #print open(currentPath + "gradingScript.py", "r").read()
 
 """
+	DEBUG:
+		Cleaned up Exceptions.. Kinda (commit):
+			Doesn't reset the command prompt and calls from former students
+			To re-enact do daniel seal then reba sellers
+"""
+
+"""
 	For some reason in the Note: Suppress Return commit it prints none
 	Learn how to suppress unwanted return statements
 """
@@ -229,4 +244,11 @@ runner()
 	to:
 		form HWa import *
 	Make HWa point to an item from a list of references
+"""
+
+"""
+	Dynamic grading. For the first several students I input
+	my comments like normal but I will never repeat my self.
+	The script will know that some error equals an equivalent comment
+	and it will autofill the comment for me.
 """
