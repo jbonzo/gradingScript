@@ -184,6 +184,13 @@ def callFunctions(filePath):
 				print "False"
 	finally:
 		sys.path.remove(filePath)
+		raw_input("\nPress Enter to go on to the next student")
+		if os.path.exists(getMediaPath() + "oneLine.txt"):
+			os.remove(getMediaPath() + "oneLine.txt")
+		if os.path.exists(getMediaPath() + "evenOdd.txt"):
+			os.remove(getMediaPath() + "evenOdd.txt")
+		if os.path.exists(getMediaPath() + "nicCage.txt"):
+			os.remove(getMediaPath() + "nicCage.txt")
 
 def grade():
 	pointsOff = 0
@@ -201,7 +208,6 @@ def runner():
 			setMediaPath2(filePath, True)
 			callFunctions(filePath)
 			setMediaPath2(filePath, False)
-		raw_input("\nPress Enter to keep going")
 		counter = counter + 1
 		clear()
 		#grade()
