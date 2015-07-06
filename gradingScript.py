@@ -18,6 +18,7 @@ import filecmp
 
 #################### Set Up ####################
 
+
 currentPathList = [
 	"D:/Users/Ricky/Desktop/Coding/Projects/gradingScript/",
 	"C:/Users/Ricky/Desktop/coding/Projects/gradingScript"
@@ -99,44 +100,114 @@ def getNewCode():
 	newCode = newCode + "return path\n\n"
 	return newCode
 
-def setMediaPath2(filePath):
+def setMediaPath2(filePath, addCode):
 	fileName = "hw06.py" if os.path.exists(filePath + "hw06.py") else "HW06.py"
 
 	testFile = open(filePath + fileName, "r+")
 	code = testFile.read().replace(getNewCode(), "")
-	code = getNewCode() + code
+	#print code[:50] + "\n"
+	if addCode:
+		code = getNewCode() + code
+		#print code[:50] + "GETTTT\n"
 	testFile.close()
-
-	testFile = open(filePath + fileName, "w+")
+	testFile = open(filePath + fileName, "w")
 	testFile.write(code)
 	testFile.close()
 
+
+
 def callFunctions(filePath):
 	sys.path.append(filePath)
-	#print "    " + str(filePath)
-	#print "    " + str(os.listdir(filePath))
 	try:
-		from hw06 import evenOdd
+		from hw06 import randomOrder, oneLine, underAverage, evenOdd, nicIsBack
+		os.startfile(filePath + "hw06.py")
 	except ImportError, e:
-		from HW06 import evenOdd
+		os.startfile(filePath + "HW06.py")
+		from HW06 import randomOrder, oneLine, underAverage, evenOdd, nicIsBack
 	else:
-		evenOdd("words.txt")
+		print "\nrandomOrder:"
+		try:
+			randomOrder("words.txt")
+		except IOError, e:
+			randomOrder(getMediaPath() + "words.txt")
+
+		raw_input("\nPress Enter to continue")
+
+		print "\noneLine.txt exists:",
+		try:
+			oneLine("words.txt")
+		except IOError, e:
+			raise e
+			oneLine(getMediaPath() + "words.txt")
+		finally:
+			if os.path.exists(getMediaPath() + "oneLine.txt"):
+				os.startfile(getMediaPath() + "oneLine.txt")
+				print  "True"
+			else:
+				print "False"
+
+		raw_input("\nPress Enter to continue")
+
+		print "\nunderAverage:"
+		try:
+			underAverage("words2.txt")
+		except IOError, e:
+			underAverage(getMediaPath() + "words2.txt")
+
+		raw_input("\nPress Enter to continue")
+
+		print "\nevenOdd.txt exists:",
+		try:
+			evenOdd("words.txt")
+		except IOError, e:
+			evenOdd(getMediaPath() + "words.txt")
+		finally:
+			if os.path.exists(getMediaPath() + "evenOdd.txt"):
+				os.startfile(getMediaPath() + "evenOdd.txt")
+				print "True"
+			else:
+				print "False"
+
+		raw_input("\nPress Enter to continue")
+
+		print "\nnicCage.txt exists:",
+		try:
+			nicIsBack("words.txt")
+		except IOError, e:
+			nicIsBackCage(getMediaPath() + "words.txt")
+		finally:
+
+			if os.path.exists(getMediaPath() + "nicCage.txt"):
+				os.startfile(getMediaPath() + "nicCage.txt")
+				print "True"
+			else:
+				print "False"
+	finally:
 		sys.path.remove(filePath)
 
-def fileCheck(file1, file2):
-	return filecmp.cmp(file1, file2)
+def grade():
+	pointsOff = 0
+	os.startfile(getMediaPath() + "nicCage.txt", "r")
+	open(getMediaPath() + "oneLine.txt", "r")
 
 def runner():
 	fileList = navigateAndStore()
-
+	counter = 0
+	clear = lambda: os.system("cls")
 	for filePath in fileList:
-		setMediaPath2(filePath)
-		callFunctions(filePath)
-		break
+		lastName = filePath.split("/")[5]
+		print lastName[:len(lastName) - 34]
+		if str(raw_input("Do you want to grade " + lastName[:len(lastName) - 34] + "?")) == "y":
+			setMediaPath2(filePath, True)
+			callFunctions(filePath)
+			setMediaPath2(filePath, False)
+		raw_input("\nPress Enter to keep going")
+		counter = counter + 1
+		clear()
+		#grade()
 
 
-print fileCheck(getMediaPath() + "evenOddTest.txt", getMediaPath() + "evenOdd.txt")
-#runner()
+runner()
 
 #print getNewCode()
 #print open(currentPath + "gradingScript.py", "r").read()
