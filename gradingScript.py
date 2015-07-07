@@ -14,7 +14,6 @@
 
 import sys
 import os
-import filecmp
 
 #################### Set Up ####################
 
@@ -100,10 +99,10 @@ def getNewCode():
 	sentinal = ""
 	while not sentinal == "def getMediaPath():\n":
 		sentinal = codeSource.readline()
-	
+
 	newCode = newCode + sentinal
 	sentinal = codeSource.readline()
-	
+
 	while not sentinal == "\t\t\treturn path\n":
 		newCode = newCode + sentinal
 		sentinal = codeSource.readline()
@@ -127,27 +126,33 @@ def setMediaPath2(filePath, addCode):
 
 def callFunctions(filePath):
 	sys.path.append(filePath)
+
 	try:
-		from hw06 import randomOrder, oneLine, underAverage, evenOdd, nicIsBack
+		hw06 = __import__("hw06")
 		os.startfile(filePath + "hw06.py")
+		reload(hw06)
 	except ImportError, e:
-		raise e
 		os.startfile(filePath + "HW06.py")
-		from HW06 import randomOrder, oneLine, underAverage, evenOdd, nicIsBack
-	
+		hw06 = __import__("HW06")
+		reload(HW06)
+
+	#for item, key in sys.modules.iteritems():
+	#	print item, key
+	#	raw_input()
+
 	print "\nrandomOrder:"
 	try:
-		randomOrder("words.txt")
+		hw06.randomOrder("words.txt")
 	except IOError, e:
-		randomOrder(getMediaPath() + "words.txt")
+		hw06.randomOrder(getMediaPath() + "words.txt")
 
 	raw_input("\nPress Enter to continue")
 
 	print "\noneLine.txt exists:",
 	try:
-		oneLine("words.txt")
+		hw06.oneLine("words.txt")
 	except IOError, e:
-		oneLine(getMediaPath() + "words.txt")
+		hw06.oneLine(getMediaPath() + "words.txt")
 	if os.path.exists(getMediaPath() + "oneLine.txt"):
 		os.startfile(getMediaPath() + "oneLine.txt")
 		print  "True"
@@ -158,17 +163,17 @@ def callFunctions(filePath):
 
 	print "\nunderAverage:"
 	try:
-		underAverage("words2.txt")
+		hw06.underAverage("words2.txt")
 	except IOError, e:
-		underAverage(getMediaPath() + "words2.txt")
+		hw06.underAverage(getMediaPath() + "words2.txt")
 
 	raw_input("\nPress Enter to continue")
 
 	print "\nevenOdd.txt exists:",
 	try:
-		evenOdd("words.txt")
+		hw06.evenOdd("words.txt")
 	except IOError, e:
-		evenOdd(getMediaPath() + "words.txt")	
+		hw06.evenOdd(getMediaPath() + "words.txt")
 	if os.path.exists(getMediaPath() + "evenOdd.txt"):
 		os.startfile(getMediaPath() + "evenOdd.txt")
 		print "True"
@@ -179,15 +184,15 @@ def callFunctions(filePath):
 
 	print "\nnicCage.txt exists:",
 	try:
-		nicIsBack("words.txt")
+		hw06.nicIsBack("words.txt")
 	except IOError, e:
-		nicIsBack(getMediaPath() + "words.txt")
+		hw06.nicIsBack(getMediaPath() + "words.txt")
 	if os.path.exists(getMediaPath() + "nicCage.txt"):
 		os.startfile(getMediaPath() + "nicCage.txt")
 		print "True"
 	else:
 		print "False"
-	
+
 	sys.path.remove(filePath)
 	raw_input("\nPress Enter to go on to the next student")
 	if os.path.exists(getMediaPath() + "oneLine.txt"):
@@ -205,10 +210,11 @@ def grade():
 	os.startfile(getMediaPath() + "nicCage.txt", "r")
 	open(getMediaPath() + "oneLine.txt", "r")
 
+
 def runner():
 	fileList = navigateAndStore()
 	counter = 0
-	clear = lambda: os.system("cls")
+	clear = lambda : os.system("cls")
 	for filePath in fileList:
 		lastName = filePath.split("/")[5]
 		print lastName[:len(lastName) - 34]
@@ -231,6 +237,8 @@ runner()
 		Cleaned up Exceptions.. Kinda (commit):
 			Doesn't reset the command prompt and calls from former students
 			To re-enact do daniel seal then reba sellers
+		FIXED:
+			used __import__("module") and reload(module)
 """
 
 """
@@ -242,8 +250,13 @@ runner()
 	change reference of:
 		from HW01 import *
 	to:
-		form HWa import *
+		from HWa import *
 	Make HWa point to an item from a list of references
+
+
+	var = __import__("x")
+	module x contains function test()
+	var.test() doesnt throw errer
 """
 
 """
