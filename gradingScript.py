@@ -49,7 +49,7 @@ students = os.listdir(bulkDownload)
 
 #################### Function Definitions ####################
 
-def findPYFile(path):
+def findFile(path, desiredFile):
 	#if the current directory is empty return none
 	if len(os.listdir(path)) <= 0:
 		return (False, "")
@@ -59,10 +59,10 @@ def findPYFile(path):
 	#if the file is there return the path of its directory
 	#if it doesnt exist and we can go deeper then go deeper
 	#else return none
-	if "hw06.py" in items or "HW06.py" in items:
+	if desiredFile in items or desiredFile in items:
 		return (True, path)
 	elif os.path.isdir(newPath):
-		return findPYFile(newPath)
+		return findFile(newPath, desiredFile)
 	else:
 		return (False, "")
 
@@ -78,7 +78,7 @@ def getMediaPath():
 			return path
 
 
-def navigateAndStore():
+def navigateAndStore(desiredFile):
 	counter = 0
 	studentFilePaths = []
 
@@ -87,10 +87,10 @@ def navigateAndStore():
 		#makes a path based on current student
 		path = bulkDownload + student
 		lastName = student.split(",")[0].strip()
-		if findPYFile(path)[0]:
+		if findFile(path, desiredFile)[0]:
 			counter = counter + 1
 			#string type for homework file path
-			studentFilePaths.append(findPYFile(path)[1] + "/")
+			studentFilePaths.append(findFile(path, desiredFile)[1] + "/")
 	return studentFilePaths
 
 def getNewCode():
@@ -121,7 +121,6 @@ def setMediaPath2(filePath, addCode):
 	testFile = open(filePath + fileName, "w")
 	testFile.write(code)
 	testFile.close()
-
 
 
 def callFunctions(filePath):
@@ -201,18 +200,19 @@ def callFunctions(filePath):
 		except WindowsError, e:
 			print "Won't remove file"
 	if os.path.exists(getMediaPath() + "evenOdd.txt"):
-		os.remove(getMediaPath() + "evenOdd.txt")
+		try:
+			os.remove(getMediaPath() + "evenOdd.txt")
+		except WindowsError, e:
+			print "Won't remove file"
 	if os.path.exists(getMediaPath() + "nicCage.txt"):
-		os.remove(getMediaPath() + "nicCage.txt")
-
-def grade():
-	pointsOff = 0
-	os.startfile(getMediaPath() + "nicCage.txt", "r")
-	open(getMediaPath() + "oneLine.txt", "r")
+		try:
+			os.remove(getMediaPath() + "nicCage.txt")
+		except WindowsError, e:
+			print "Won't remove file"
 
 
 def runner():
-	fileList = navigateAndStore()
+	fileList = navigateAndStore("hw06.py")
 	counter = 0
 	clear = lambda : os.system("cls")
 	for filePath in fileList:
@@ -224,7 +224,6 @@ def runner():
 			setMediaPath2(filePath, False)
 		counter = counter + 1
 		clear()
-		#grade()
 
 
 runner()
@@ -257,6 +256,10 @@ runner()
 	var = __import__("x")
 	module x contains function test()
 	var.test() doesnt throw errer
+"""
+
+"""
+	Maybe make gradingScript a class and call functions from it to make it more dynamic
 """
 
 """
