@@ -59,12 +59,31 @@ def findFile(path, desiredFile):
 	#if the file is there return the path of its directory
 	#if it doesnt exist and we can go deeper then go deeper
 	#else return none
-	if desiredFile in items or desiredFile in items:
+	if desiredFile in items:
 		return (True, path)
 	elif os.path.isdir(newPath):
 		return findFile(newPath, desiredFile)
 	else:
 		return (False, "")
+
+def findFileExt(path, desiredExtension):
+	#if the current directory is empty return none
+	if len(os.listdir(path)) <= 0:
+		return (False, "", )
+	items = os.listdir(path)
+	newPath = path + "/" + items[0]
+
+	#if the file is there return the path of its directory
+	#if it doesnt exist and we can go deeper then go deeper
+	#else return none
+	#Ternary  = "desired outcome" if condition else "other outcome"
+	for item in items:
+		if desiredExtension in item:
+			return (True, item, path)
+	if os.path.isdir(newPath):
+		return findFileExt(newPath, desiredExtension)
+	else:
+		return (False, "", )
 
 def getMediaPath():
 	textPathList = [
@@ -87,10 +106,15 @@ def navigateAndStore(desiredFile):
 		#makes a path based on current student
 		path = bulkDownload + student
 		lastName = student.split(",")[0].strip()
-		if findFile(path, desiredFile)[0]:
-			counter = counter + 1
-			#string type for homework file path
-			studentFilePaths.append(findFile(path, desiredFile)[1] + "/")
+		if desiredFile[0] == ".":
+			if findFileExt(path, desiredFile)[0]:
+				counter = counter + 1
+				studentFilePaths.append(findFileExt(path, desiredFile))
+		else:
+			if findFile(path, desiredFile)[0]:
+				counter = counter + 1
+				#string type for homework file path
+				studentFilePaths.append(findFile(path, desiredFile)[1] + "/")
 	return studentFilePaths
 
 def getNewCode():
@@ -109,7 +133,7 @@ def getNewCode():
 	return newCode + sentinal
 
 def setMediaPath2(filePath, addCode):
-	fileName = "hw06.py" if os.path.exists(filePath + "hw06.py") else "HW06.py"
+	fileName = "hw.py" if os.path.exists(filePath + "hw.py") else "hw.py"
 
 	testFile = open(filePath + fileName, "r+")
 	code = testFile.read().replace(getNewCode(), "")
@@ -127,109 +151,58 @@ def callFunctions(filePath):
 	sys.path.append(filePath)
 
 	try:
-		hw06 = __import__("hw06")
-		os.startfile(filePath + "hw06.py")
-		reload(hw06)
+		hw = __import__("hw08")
+		os.startfile(filePath + "hw08.py")
+		reload(hw)
 	except ImportError, e:
-		os.startfile(filePath + "HW06.py")
-		hw06 = __import__("HW06")
-		reload(HW06)
-
-	#for item, key in sys.modules.iteritems():
-	#	print item, key
-	#	raw_input()
-
-	print "\nrandomOrder:"
+		os.startfile(filePath + "hw08.py")
+		hw = __import__("HW08")
+		reload(hw)
 	try:
-		hw06.randomOrder("words.txt")
-	except IOError, e:
-		hw06.randomOrder(getMediaPath() + "words.txt")
-
-	raw_input("\nPress Enter to continue")
-
-	print "\noneLine.txt exists:",
-	try:
-		hw06.oneLine("words.txt")
-	except IOError, e:
-		hw06.oneLine(getMediaPath() + "words.txt")
-	if os.path.exists(getMediaPath() + "oneLine.txt"):
-		os.startfile(getMediaPath() + "oneLine.txt")
-		print  "True"
-	else:
-		print "False"
-
-	raw_input("\nPress Enter to continue")
-
-	print "\nunderAverage:"
-	try:
-		hw06.underAverage("words2.txt")
-	except IOError, e:
-		hw06.underAverage(getMediaPath() + "words2.txt")
-
-	raw_input("\nPress Enter to continue")
-
-	print "\nevenOdd.txt exists:",
-	try:
-		hw06.evenOdd("words.txt")
-	except IOError, e:
-		hw06.evenOdd(getMediaPath() + "words.txt")
-	if os.path.exists(getMediaPath() + "evenOdd.txt"):
-		os.startfile(getMediaPath() + "evenOdd.txt")
-		print "True"
-	else:
-		print "False"
-
-	raw_input("\nPress Enter to continue")
-
-	print "\nnicCage.txt exists:",
-	try:
-		hw06.nicIsBack("words.txt")
-	except IOError, e:
-		hw06.nicIsBack(getMediaPath() + "words.txt")
-	if os.path.exists(getMediaPath() + "nicCage.txt"):
-		os.startfile(getMediaPath() + "nicCage.txt")
-		print "True"
-	else:
-		print "False"
-
-	sys.path.remove(filePath)
-	raw_input("\nPress Enter to go on to the next student")
-	if os.path.exists(getMediaPath() + "oneLine.txt"):
-		try:
-			os.remove(getMediaPath() + "oneLine.txt")
-		except WindowsError, e:
-			print "Won't remove file"
-	if os.path.exists(getMediaPath() + "evenOdd.txt"):
-		try:
-			os.remove(getMediaPath() + "evenOdd.txt")
-		except WindowsError, e:
-			print "Won't remove file"
-	if os.path.exists(getMediaPath() + "nicCage.txt"):
-		try:
-			os.remove(getMediaPath() + "nicCage.txt")
-		except WindowsError, e:
-			print "Won't remove file"
+		print "pyramid Test 1: " + str(hw.pyramid(3) == 14)
+		print "pyramid Test 2: " + str(hw.pyramid(35) == 14910)
+		print "allStar Test 1: " + str(hw.allStar("abc") == "a*b*c")
+		print "allStar Test 2: " + str(hw.allStar("smashmouth") == "s*m*a*s*h*m*o*u*t*h")
+		print "parenBit Test 1: " + str(hw.parenBit("askdfjnskdfnas(abd)asdfkjns") == "(abd)")
+		print "parenBit Test 2: " + str(hw.parenBit("askdfjnsk45cgdfnas(1623)asdfc4q3r4r") == "(1623)")
+	except:
+		print "Oh no their code messed up..."
 
 
-def runner():
-	fileList = navigateAndStore("hw06.py")
+
+
+
+
+
+
+def scriptRunner():
+	fileList = navigateAndStore("hw.py")
 	counter = 0
 	clear = lambda : os.system("cls")
+	done = False
 	for filePath in fileList:
 		lastName = filePath.split("/")[5]
+		prompt = "Do you want to grade " + lastName[:len(lastName) - 34] + "?"
 		print lastName[:len(lastName) - 34]
-		if str(raw_input("Do you want to grade " + lastName[:len(lastName) - 34] + "?")) == "y":
+		if str(raw_input(prompt)) == "y":
 			setMediaPath2(filePath, True)
-			callFunctions(filePath)
+			while not done:
+				callFunctions(filePath)
+
 			setMediaPath2(filePath, False)
 		counter = counter + 1
 		clear()
 
 
-runner()
+#scriptRunner()
 
 #print getNewCode()
 #print open(currentPath + "gradingScript.py", "r").read()
+
+#for item, key in sys.modules.iteritems():
+	#	print item, key
+	#	raw_input()
+
 
 """
 	DEBUG:
@@ -256,6 +229,14 @@ runner()
 	var = __import__("x")
 	module x contains function test()
 	var.test() doesnt throw errer
+"""
+
+"""
+	Merge findFile and findFileExt for eloquence
+"""
+
+"""
+	Make this file a library
 """
 
 """
