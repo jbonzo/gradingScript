@@ -32,7 +32,9 @@ bulkPathList = [
 ]
 bulkDownload = ""
 
+hwPy = ""
 
+answers = []
 
 #to make it compatible with any developing computer
 for bulkPath in bulkPathList:
@@ -55,7 +57,6 @@ def findFile(path, desiredFile):
 		return (False, "")
 	items = os.listdir(path)
 	newPath = path + "/" + items[0]
-
 	#if the file is there return the path of its directory
 	#if it doesnt exist and we can go deeper then go deeper
 	#else return none
@@ -100,12 +101,13 @@ def getMediaPath():
 def navigateAndStore(desiredFile):
 	counter = 0
 	studentFilePaths = []
-
+	global hwPy
+	hwPy = desiredFile
 	#cycle through every student
 	for student in students:
 		#makes a path based on current student
 		path = bulkDownload + student
-		lastName = student.split(",")[0].strip()
+		#lastName = student.split(",")[0].strip()
 		if desiredFile[0] == ".":
 			if findFileExt(path, desiredFile)[0]:
 				counter = counter + 1
@@ -133,7 +135,7 @@ def getNewCode():
 	return newCode + sentinal
 
 def setMediaPath2(filePath, addCode):
-	fileName = "hw.py" if os.path.exists(filePath + "hw.py") else "hw.py"
+	fileName = hwPy if os.path.exists(filePath + hwPy) else hwPy
 
 	testFile = open(filePath + fileName, "r+")
 	code = testFile.read().replace(getNewCode(), "")
@@ -146,27 +148,82 @@ def setMediaPath2(filePath, addCode):
 	testFile.write(code)
 	testFile.close()
 
+def checkAnswer(x):
+	if not x == answers[0]:
+		print x == answers[0]
+		raw_input(x)
+		#openHw()
+	else:
+		print x == answers[0]
+	del answers[0]
+
+def problem6(filePath):
+	output = ""
+	inputLines = open(filePath + hwPy, "rt").readlines()
+
+	printBool = False
+	for line in inputLines:
+		if line == "# Big O\n" or line == "# problem6\n":
+			print line
+			printBool = True
+		elif printBool:
+			print line
+
+
+
 
 def callFunctions(filePath):
 	sys.path.append(filePath)
+	global openHw
+	openHw = lambda : os.startfile(filePath + hwPy)
+	global answers
+	answers = [14,14910,"a*b*c","s*m*a*s*h*m*o*u*t*h","(abd)","(1623)",4,7]
 
 	try:
-		hw = __import__("hw08")
-		os.startfile(filePath + "hw08.py")
+		hw = __import__(hwPy[:len(hwPy) - 3])
+		#openHw()
 		reload(hw)
 	except ImportError, e:
-		os.startfile(filePath + "hw08.py")
-		hw = __import__("HW08")
+		#openHw()
+		hw = __import__(hwPy[:len(hwPy) - 3])
 		reload(hw)
+
 	try:
-		print "pyramid Test 1: " + str(hw.pyramid(3) == 14)
-		print "pyramid Test 2: " + str(hw.pyramid(35) == 14910)
-		print "allStar Test 1: " + str(hw.allStar("abc") == "a*b*c")
-		print "allStar Test 2: " + str(hw.allStar("smashmouth") == "s*m*a*s*h*m*o*u*t*h")
-		print "parenBit Test 1: " + str(hw.parenBit("askdfjnskdfnas(abd)asdfkjns") == "(abd)")
-		print "parenBit Test 2: " + str(hw.parenBit("askdfjnsk45cgdfnas(1623)asdfc4q3r4r") == "(1623)")
+		print
+
+		print "pyramid Test 1: ",
+		checkAnswer(hw.pyramid(3))
+
+		print "pyramid Test 2: ",
+		checkAnswer(hw.pyramid(35))
+
+		print "allStar Test 1: ",
+		checkAnswer(hw.allStar("abc"))
+
+		print "allStar Test 2: ",
+		checkAnswer(hw.allStar("smashmouth"))
+
+		print "parenBit Test 1: ",
+		checkAnswer(hw.parenBit("askdfjnskdfnas(abd)asdfkjns"))
+
+		print "parenBit Test 2: ",
+		checkAnswer(hw.parenBit("askdfjnsk45cgdfnas(1623)asdfc4q3r4r"))
+
+		print "xCounter Test 1:",
+		checkAnswer(hw.xCounter("kajsdnfkjadsnxkjansdxkjansdfxkjandx"))
+
+		print "xCounter Test 2:",
+		checkAnswer(hw.xCounter("jaskdfjnxkajndxkajndxkajndxkajdnxkajndxklajndx"))
+
+		print "codingSong:",
+		hw.codingSong(3)
+
+		problem6(filePath)
+
 	except:
+		raise
 		print "Oh no their code messed up..."
+		openHw()
 
 
 
@@ -193,7 +250,7 @@ def scriptRunner():
 		counter = counter + 1
 		clear()
 
-
+navigateAndStore("hw08hw08")
 #scriptRunner()
 
 #print getNewCode()
