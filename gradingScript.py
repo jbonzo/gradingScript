@@ -14,6 +14,7 @@
 
 import sys
 import os
+from time import sleep
 
 #################### Set Up ####################
 
@@ -149,17 +150,16 @@ def setMediaPath2(filePath, addCode):
 	testFile.close()
 
 def checkAnswer(x):
+	print x == answers[0]
 	if not x == answers[0]:
-		print x == answers[0]
 		raw_input(x)
 		#openHw()
-	else:
-		print x == answers[0]
 	del answers[0]
 
 def problem6(filePath):
 	output = ""
 	inputLines = open(filePath + hwPy, "rt").readlines()
+	print
 
 	printBool = False
 	for line in inputLines:
@@ -169,8 +169,25 @@ def problem6(filePath):
 		elif printBool:
 			print line
 
-
-
+def debugApostropheProblem(filePath):
+	returnBool = False
+	string = ""
+	with open(filePath + hwPy) as fp:
+		for i, line in enumerate(fp):
+			#print line
+			#raw_input()
+			if "\x92" in line:
+				returnBool = True
+				print
+				print "Yes it was the apostrope problem\nNow we try to fix it"
+				sleep(5)
+				line = line.replace("\x92", "'")
+			string = string + line
+		fp.close()
+		fp = open(filePath + hwPy, "w")
+		fp.write(string)
+		fp.close
+		return returnBool
 
 def callFunctions(filePath):
 	sys.path.append(filePath)
@@ -187,26 +204,38 @@ def callFunctions(filePath):
 		#openHw()
 		hw = __import__(hwPy[:len(hwPy) - 3])
 		reload(hw)
+	except SyntaxError, e:
+		print "Oh no their code messed up..."
+		sleep(1)
+		print "We are going to see if it's that apostrophe problem"
+		sleep(1)
+		if not debugApostropheProblem(filePath):
+			print "hm it wasnt that"
+			sleep(3)
+			print e
+			openHw()
+		else:
+			return
 
 	try:
 		print
 
-		print "pyramid Test 1: ",
+		print "pyramid Test 1:",
 		checkAnswer(hw.pyramid(3))
 
-		print "pyramid Test 2: ",
+		print "pyramid Test 2:",
 		checkAnswer(hw.pyramid(35))
 
-		print "allStar Test 1: ",
+		print "allStar Test 1:",
 		checkAnswer(hw.allStar("abc"))
 
-		print "allStar Test 2: ",
+		print "allStar Test 2:",
 		checkAnswer(hw.allStar("smashmouth"))
 
-		print "parenBit Test 1: ",
+		print "parenBit Test 1:",
 		checkAnswer(hw.parenBit("askdfjnskdfnas(abd)asdfkjns"))
 
-		print "parenBit Test 2: ",
+		print "parenBit Test 2:",
 		checkAnswer(hw.parenBit("askdfjnsk45cgdfnas(1623)asdfc4q3r4r"))
 
 		print "xCounter Test 1:",
@@ -215,22 +244,24 @@ def callFunctions(filePath):
 		print "xCounter Test 2:",
 		checkAnswer(hw.xCounter("jaskdfjnxkajndxkajndxkajndxkajdnxkajndxklajndx"))
 
-		print "codingSong:",
+		print "\ncodingSong:",
 		hw.codingSong(3)
 
-		problem6(filePath)
-
-	except:
-		raise
-		print "Oh no their code messed up..."
+		#problem6(filePath)
+		raw_input()
 		openHw()
-
-
-
-
-
-
-
+		sys.path.remove(filePath)
+	except AttributeError, e:
+		print e
+	except TypeError, e:
+		print e
+	except NameError, e:
+		print e
+	except Exception, e:
+		#raise e
+		print
+		raw_input("Oh no their code messed up...")
+		openHw()
 
 def scriptRunner():
 	fileList = navigateAndStore("hw.py")
@@ -250,7 +281,7 @@ def scriptRunner():
 		counter = counter + 1
 		clear()
 
-navigateAndStore("hw08hw08")
+#navigateAndStore("hw08.py")
 #scriptRunner()
 
 #print getNewCode()

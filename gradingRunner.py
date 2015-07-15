@@ -13,12 +13,11 @@ def runner():
         donePrompt = "Are you done grading this homework?"
         print lastName[:len(lastName) - 34]
         if str(raw_input(prompt)) == "y":
-            g.setMediaPath2(filePath, True)
             while not done:
                 g.callFunctions(filePath)
                 if str(raw_input(donePrompt)) == "y":
                     done = True
-            g.setMediaPath2(filePath, False)
+
         counter = counter + 1
         clear()
 
