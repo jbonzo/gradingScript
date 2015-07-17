@@ -17,6 +17,7 @@ def runner():
                 g.callFunctions(filePath)
                 if str(raw_input(donePrompt)) == "y":
                     done = True
+                clear()
 
         counter = counter + 1
         clear()

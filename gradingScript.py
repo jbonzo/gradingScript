@@ -152,7 +152,7 @@ def setMediaPath2(filePath, addCode):
 def checkAnswer(x):
 	print x == answers[0]
 	if not x == answers[0]:
-		raw_input(x)
+		print x
 		#openHw()
 	del answers[0]
 
@@ -176,12 +176,13 @@ def debugApostropheProblem(filePath):
 		for i, line in enumerate(fp):
 			#print line
 			#raw_input()
-			if "\x92" in line:
+			if "\x92" in line or "\xe2" in line:
 				returnBool = True
 				print
 				print "Yes it was the apostrope problem\nNow we try to fix it"
 				sleep(5)
-				line = line.replace("\x92", "'")
+				line = line.replace("\x92", " ")
+				line = line.replace("\xe2", " ")
 			string = string + line
 		fp.close()
 		fp = open(filePath + hwPy, "w")
@@ -198,14 +199,14 @@ def callFunctions(filePath):
 
 	try:
 		hw = __import__(hwPy[:len(hwPy) - 3])
-		#openHw()
+		openHw()
 		reload(hw)
 	except ImportError, e:
-		#openHw()
+		openHw()
 		hw = __import__(hwPy[:len(hwPy) - 3])
 		reload(hw)
 	except SyntaxError, e:
-		print "Oh no their code messed up..."
+		print "Their code had a SyntaxError..."
 		sleep(1)
 		print "We are going to see if it's that apostrophe problem"
 		sleep(1)
@@ -239,26 +240,35 @@ def callFunctions(filePath):
 		checkAnswer(hw.parenBit("askdfjnsk45cgdfnas(1623)asdfc4q3r4r"))
 
 		print "xCounter Test 1:",
-		checkAnswer(hw.xCounter("kajsdnfkjadsnxkjansdxkjansdfxkjandx"))
+		checkAnswer(hw.xCounter("kajsdnfkjadsnxkjansdxkjansdfxkjandx", 0))
 
 		print "xCounter Test 2:",
-		checkAnswer(hw.xCounter("jaskdfjnxkajndxkajndxkajndxkajdnxkajndxklajndx"))
+		checkAnswer(hw.xCounter("jaskdfjnxkajndxkajndxkajndxkajdnxkajndxklajndx", 0))
 
 		print "\ncodingSong:",
 		hw.codingSong(3)
 
 		#problem6(filePath)
-		raw_input()
-		openHw()
+		print "Big O"
+		sleep(3)
+		#openHw()
 		sys.path.remove(filePath)
 	except AttributeError, e:
+		print "AttributeError"
 		print e
+		sleep(3)
+		openHw()
 	except TypeError, e:
+		print "TypeError"
 		print e
 	except NameError, e:
+		print "NameError"
+		print e
+	except IndexError, e:
+		print "IndexError"
 		print e
 	except Exception, e:
-		#raise e
+		raise e
 		print
 		raw_input("Oh no their code messed up...")
 		openHw()
@@ -336,4 +346,8 @@ def scriptRunner():
 	my comments like normal but I will never repeat my self.
 	The script will know that some error equals an equivalent comment
 	and it will autofill the comment for me.
+"""
+
+"""
+	Import JES's library.... duh
 """
