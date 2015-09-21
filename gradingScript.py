@@ -12,8 +12,8 @@
 	5. Print score
 """
 
-import sys
-import os
+import sys,os,subprocess,platform
+from os import path
 from time import sleep
 
 #################### Set Up ####################
@@ -22,24 +22,28 @@ from time import sleep
 currentPathList = [
 	"D:/Users/Ricky/Desktop/Coding/Projects/gradingScript/",
 	"C:/Users/Ricky/Desktop/coding/Projects/gradingScript/",
-	"C:/Users/rbarillas3/Documents/GitHub/gradingScript/"
+	"C:/Users/rbarillas3/Documents/GitHub/gradingScript/",
+	"Users/$Users/Documents/coding/Projects/gradingScript/gradingScript.py"
 ]
 currentPath = ""
 
 bulkPathList = [
-	"C:/Users/rbarillas3/Downloads/Bulk Download/",
-	"D:/Users/Ricky/Downloads/Bulk Download/",
-	"C:/Users/Ricky/Downloads/Bulk Download/"
+	"C:/Users/%USERNAME%/Downloads/Bulk Download/",
+	"D:/Users/%USERNAME%/Downloads/Bulk Download/",
+	"~/Downloads/Bulk Download/"
 ]
 bulkDownload = ""
 
+isWindows = platform.system() == "Windows"
+
+#don't delete
 hwPy = ""
 
 answers = []
-
 #to make it compatible with any developing computer
 for bulkPath in bulkPathList:
-	if os.path.exists(bulkPath):
+	bulkPath = path.expanduser(bulkPath)
+	if path.exists(bulkPath):
 		bulkDownload = bulkPath
 
 for path in currentPathList:
@@ -54,7 +58,8 @@ students = os.listdir(bulkDownload)
 
 def findFile(path, desiredFile):
 	#if the current directory is empty return none
-	if len(os.listdir(path)) <= 0:
+
+	if not os.path.isdir(path) or len(os.listdir(path)) <= 0:
 		return (False, "")
 	items = os.listdir(path)
 	newPath = path + "/" + items[0]
@@ -70,6 +75,8 @@ def findFile(path, desiredFile):
 
 def findFileExt(path, desiredExtension):
 	#if the current directory is empty return none
+	if not os.path.exists(path):
+		return (False, "", )
 	if len(os.listdir(path)) <= 0:
 		return (False, "", )
 	items = os.listdir(path)
@@ -193,7 +200,7 @@ def debugApostropheProblem(filePath):
 def callFunctions(filePath):
 	sys.path.append(filePath)
 	global openHw
-	openHw = lambda : os.startfile(filePath + hwPy)
+	openHw = lambda : (os.startfile(filePath + hwPy) if isWindows else subprocess.call(["open", filePath + hwPy]))
 	global answers
 	answers = [14,14910,"a*b*c","s*m*a*s*h*m*o*u*t*h","(abd)","(1623)",4,7]
 
@@ -221,37 +228,27 @@ def callFunctions(filePath):
 	try:
 		print
 
-		print "pyramid Test 1:",
-		checkAnswer(hw.pyramid(3))
+		print "makePassword:",
+		hw.makePassword("purple", "%", 442)
 
-		print "pyramid Test 2:",
-		checkAnswer(hw.pyramid(35))
+		print "spell:",
+		hw.spell("stanchion")
 
-		print "allStar Test 1:",
-		checkAnswer(hw.allStar("abc"))
+		print "babyName:",
+		hw.babyName("Arthur")
 
-		print "allStar Test 2:",
-		checkAnswer(hw.allStar("smashmouth"))
+		print "babyName:",
+		hw.babyName("Frank")
 
-		print "parenBit Test 1:",
-		checkAnswer(hw.parenBit("askdfjnskdfnas(abd)asdfkjns"))
+		print "process:",
+		hw.process(7)
 
-		print "parenBit Test 2:",
-		checkAnswer(hw.parenBit("askdfjnsk45cgdfnas(1623)asdfc4q3r4r"))
+		print "process:",
+		hw.process(16)
 
-		print "xCounter Test 1:",
-		checkAnswer(hw.xCounter("kajsdnfkjadsnxkjansdxkjansdfxkjandx", 0))
+		print "getLegalString:",
+		hw.getLegalString("The dictator is a super cool dude", "tca")
 
-		print "xCounter Test 2:",
-		checkAnswer(hw.xCounter("jaskdfjnxkajndxkajndxkajndxkajdnxkajndxklajndx", 0))
-
-		print "\ncodingSong:",
-		hw.codingSong(3)
-
-		#problem6(filePath)
-		print "Big O"
-		sleep(3)
-		#openHw()
 		sys.path.remove(filePath)
 	except AttributeError, e:
 		print "AttributeError"
@@ -286,7 +283,6 @@ def scriptRunner():
 			setMediaPath2(filePath, True)
 			while not done:
 				callFunctions(filePath)
-
 			setMediaPath2(filePath, False)
 		counter = counter + 1
 		clear()
