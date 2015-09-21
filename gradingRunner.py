@@ -1,10 +1,14 @@
 g = __import__("gradingScript")
 import os
+import platform
 
 def runner():
-    fileList = g.navigateAndStore("hw08.py")
+    isWindows = platform.system() == "Windows"
+
+    hwNum = str(raw_input("What homework number is this?"))
+    fileList = g.navigateAndStore("hw0" + hwNum + ".py")
     counter = 0
-    clear = lambda : os.system("cls")
+    clear = lambda : (os.system("cls") if isWindows else os.system("clear"))
 
     for filePath in fileList:
         done = False
@@ -21,5 +25,7 @@ def runner():
 
         counter = counter + 1
         clear()
+
+    
 
 runner()
