@@ -229,27 +229,26 @@ def callFunctions(filePath):
 		print
 
 		print "makePassword:",
-		checkAnswer(hw.makePassword("purple", "%", 442))
+		hw.makePassword("purple", "%", 442)
 
 		print "spell:",
-		checkAnswer(hw.spell("stanchion"))
+		hw.spell("stanchion")
 
 		print "babyName:",
-		checkAnswer(hw.babyName("Arthur"))
+		hw.babyName("Arthur")
 
 		print "babyName:",
-		checkAnswer(hw.babyName("Frank"))
+		hw.babyName("Frank")
 
 		print "process:",
-		checkAnswer(hw.process(7))
+		hw.process(7)
 
 		print "process:",
-		checkAnswer(hw.process(16))
+		hw.process(16)
 
 		print "getLegalString:",
-		checkAnswer(hw.getLegalString("The dictator is a super cool dude", "tca"))
+		hw.getLegalString("The dictator is a super cool dude", "tca")
 
-		
 		sys.path.remove(filePath)
 	except AttributeError, e:
 		print "AttributeError"
